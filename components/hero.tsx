@@ -64,8 +64,8 @@ export function Hero() {
           {/* Right Image */}
           <div className="relative min-h-[400px] lg:min-h-full">
             <Image
-              src="/images/Gallery/Logo.jpg"
-              alt="Professional driveway sealcoating and masonry work"
+              src="/images/Gallery/seal-the-deal-logo-clean.png"
+              alt="Seal The Deal Asphalt Care & Masonry logo"
               fill
               className="object-contain"
               priority
