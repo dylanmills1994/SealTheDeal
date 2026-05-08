@@ -48,7 +48,7 @@ export function Header() {
             <div className="flex flex-col">
               <span className="text-lg font-bold text-foreground leading-tight">Seal The Deal</span>
               <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                Sealcoating & Masonry Services
+                Asphalt Care & Masonry
               </span>
             </div>
           </Link>

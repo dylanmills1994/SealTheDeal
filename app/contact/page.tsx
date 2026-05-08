@@ -57,7 +57,7 @@ const contactInfo = [
   {
     icon: Facebook,
     title: "Facebook / Messenger",
-    value: "Seal The Deal Sealcoating & Masonry Services",
+    value: "Seal The Deal Asphalt Care & Masonry",
     subtext: "Message us on Facebook",
     href: "https://facebook.com",
   },

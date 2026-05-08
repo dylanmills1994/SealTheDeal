@@ -7,7 +7,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Seal The Deal | Sealcoating & Masonry Services | Prescott, ON',
+  title: 'Seal The Deal | Asphalt Care & Masonry | Prescott, ON',
   description: 'Quality asphalt care, masonry, and concrete work for homes and businesses in Prescott, ON and surrounding communities. Fully insured, free quotes available.',
   generator: 'v0.app',
   icons: {
