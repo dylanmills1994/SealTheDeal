@@ -104,7 +104,7 @@ values
     'Hero Logo',
     '/images/Gallery/seal-the-deal-logo-clean.png',
     null,
-    'Seal The Deal Sealcoating & Masonry Services logo',
+    'Seal The Deal Asphalt Care & Masonry logo',
     0,
     true
   ),

@@ -25,7 +25,7 @@ export function Footer() {
           <div>
             <div className="mb-4 flex items-center gap-3">
               <Image
-                src="/images/Gallery/Logo.jpg"
+                src="/images/Gallery/LOGOIMG.png"
                 alt="Seal The Deal Logo"
                 width={50}
                 height={50}
@@ -34,12 +34,12 @@ export function Footer() {
               <div>
                 <h3 className="text-lg font-bold">Seal The Deal</h3>
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-secondary-foreground/70">
-                  Sealcoating & Masonry Services
+                  Asphalt Care & Masonry
                 </p>
               </div>
             </div>
             <p className="text-sm text-secondary-foreground/80 leading-relaxed">
-              Sealcoating, masonry, concrete and foundation services you can count on. Insured. Trusted. Local.
+              Asphalt care, masonry, concrete and foundation services you can count on. Insured. Trusted. Local.
             </p>
             <a
               href="https://facebook.com"
@@ -120,7 +120,7 @@ export function Footer() {
       <div className="border-t border-secondary-foreground/10">
         <div className="mx-auto max-w-7xl px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-secondary-foreground/60">
-            &copy; {new Date().getFullYear()} Seal The Deal Sealcoating & Masonry Services. All Rights Reserved.
+            &copy; {new Date().getFullYear()} Seal The Deal Asphalt Care & Masonry. All Rights Reserved.
           </p>
           <p className="text-xs text-secondary-foreground/60">
             Fully Insured | Trusted | Local
