@@ -39,7 +39,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/images/Gallery/Logo.jpg"
+              src="/images/Gallery/LOGOIMG.png"
               alt="Seal The Deal Logo"
               width={50}
               height={50}
