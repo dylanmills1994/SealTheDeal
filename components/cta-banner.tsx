@@ -23,7 +23,7 @@ export function CtaBanner() {
           {/* Contact Info */}
           <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8">
             <a
-              href="tel:3432609276"
+              href="tel:+13432609276"
               className="flex items-center gap-3 text-primary-foreground hover:opacity-80 transition-opacity"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
@@ -35,7 +35,7 @@ export function CtaBanner() {
               </div>
             </a>
             <a
-              href="mailto:sealthedeal1994@gmail.com"
+              href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request"
               className="flex items-center gap-3 text-primary-foreground hover:opacity-80 transition-opacity"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">

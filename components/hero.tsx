@@ -47,7 +47,7 @@ export function Hero() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4">
               <Button size="lg" asChild>
-                <a href="tel:3432609276">
+                <a href="tel:+13432609276">
                   <Phone className="mr-2 h-4 w-4" />
                   Call (343) 260-9276
                 </a>
@@ -64,10 +64,10 @@ export function Hero() {
           {/* Right Image */}
           <div className="relative min-h-[400px] lg:min-h-full">
             <Image
-              src="/images/hero-driveway.jpg"
+              src="/images/Gallery/Logo.jpg"
               alt="Professional driveway sealcoating and masonry work"
               fill
-              className="object-cover"
+              className="object-contain"
               priority
             />
             {/* Badge */}
