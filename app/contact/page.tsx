@@ -38,14 +38,14 @@ const contactInfo = [
     title: "Phone",
     value: "(343) 260-9276",
     subtext: "Call or Text",
-    href: "tel:3432609276",
+    href: "tel:+13432609276",
   },
   {
     icon: Mail,
     title: "Email",
     value: "sealthedeal1994@gmail.com",
     subtext: "We reply fast!",
-    href: "mailto:sealthedeal1994@gmail.com",
+    href: "mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request",
   },
   {
     icon: MapPin,
@@ -120,8 +120,9 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log("[v0] Form submitted:", formData)
+    const subject = encodeURIComponent("Seal The Deal Quote Request")
+    const body = encodeURIComponent(`Name: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nService: ${formData.service}\n\nProject Details:\n${formData.details}`)
+    window.location.href = `mailto:sealthedeal1994@gmail.com?subject=${subject}&body=${body}`
   }
 
   return (
@@ -145,7 +146,7 @@ export default function ContactPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Button asChild size="lg">
-                <a href="tel:3432609276">
+                <a href="tel:+13432609276">
                   <Phone className="mr-2 h-4 w-4" />
                   <div className="flex flex-col items-start">
                     <span className="text-xs">CALL NOW</span>
@@ -175,7 +176,7 @@ export default function ContactPage() {
               style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }}
             />
             <Image
-              src="/images/contact-hero.jpg"
+              src="/images/Gallery/39.jpg"
               alt="Contact Hero"
               fill
               className="object-cover"

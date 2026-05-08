@@ -5,25 +5,25 @@ import { Button } from "@/components/ui/button"
 const projects = [
   {
     title: "Driveway Sealcoating",
-    image: "/images/project-driveway.jpg",
+    image: "/images/Gallery/34.jpg",
   },
   {
     title: "Masonry Steps & Walls",
-    image: "/images/project-steps.jpg",
+    image: "/images/Gallery/11.jpg",
   },
   {
     title: "Concrete Walkways",
-    image: "/images/project-walkway.jpg",
+    image: "/images/Gallery/14.jpg",
   },
   {
     title: "Asphalt Driveway Refresh",
-    image: "/images/project-asphalt.jpg",
+    image: "/images/Gallery/19.jpg",
   },
 ]
 
 export function Projects() {
   return (
-    <section id="projects" className="bg-muted/30 py-16 lg:py-24">
+    <section id="work" className="bg-muted/30 py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
         {/* Section Header */}
         <div className="mb-12 text-center">

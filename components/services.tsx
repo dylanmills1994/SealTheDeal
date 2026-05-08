@@ -7,7 +7,7 @@ const services = [
     title: "Sealcoating",
     description: "Protect and extend the life of your driveway with premium sealcoating that resists weather and wear.",
     icon: Paintbrush,
-    image: "/images/sealcoating.jpg",
+    image: "/images/Gallery/20.jpg",
     position: "top-right",
   },
   {
@@ -15,7 +15,7 @@ const services = [
     title: "Crack Filling",
     description: "Prevent water damage and deterioration with professional crack filling.",
     icon: Wrench,
-    image: "/images/crack-filling.jpg",
+    image: "/images/Gallery/23.jpg",
     position: "top-left",
   },
   {
@@ -23,7 +23,7 @@ const services = [
     title: "Masonry Work",
     description: "Brick, stone, and block work for steps, patios, walls, and more. Built strong and built to last.",
     icon: Building,
-    image: "/images/masonry.jpg",
+    image: "/images/Gallery/30.jpg",
     position: "bottom-right",
   },
   {
@@ -31,7 +31,7 @@ const services = [
     title: "Concrete Work",
     description: "Sidewalks, steps, pads, and more. Strong, smooth, and built to last.",
     icon: HardHat,
-    image: "/images/concrete.jpg",
+    image: "/images/Gallery/25.jpg",
     position: "bottom-left",
   },
 ]

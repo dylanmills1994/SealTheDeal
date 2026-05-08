@@ -20,49 +20,49 @@ const categories = [
 const galleryItems = [
   {
     id: 1,
-    image: "/images/gallery/foundation-repair.jpg",
+    image: "/images/Gallery/1.jpg",
     title: "Foundation Repair",
     category: "foundation",
   },
   {
     id: 2,
-    image: "/images/gallery/masonry-restoration.jpg",
+    image: "/images/Gallery/2.jpg",
     title: "Masonry Restoration",
     category: "masonry",
   },
   {
     id: 3,
-    image: "/images/gallery/concrete-pad.jpg",
+    image: "/images/Gallery/3.jpg",
     title: "Concrete Pad Prep",
     category: "concrete",
   },
   {
     id: 4,
-    image: "/images/gallery/sealcoating-asphalt.jpg",
+    image: "/images/Gallery/4.jpg",
     title: "Sealcoating & Asphalt Care",
     category: "asphalt",
   },
   {
     id: 5,
-    image: "/images/gallery/exterior-foundation.jpg",
+    image: "/images/Gallery/5.jpg",
     title: "Exterior Foundation Repair",
     category: "foundation",
   },
   {
     id: 6,
-    image: "/images/gallery/basement-wall.jpg",
+    image: "/images/Gallery/6.jpg",
     title: "Basement Wall Repair",
     category: "foundation",
   },
   {
     id: 7,
-    image: "/images/gallery/crawlspace-wall.jpg",
+    image: "/images/Gallery/7.jpg",
     title: "Crawlspace Wall Work",
     category: "foundation",
   },
   {
     id: 8,
-    image: "/images/gallery/parging.jpg",
+    image: "/images/Gallery/8.jpg",
     title: "Parging & Resurfacing",
     category: "masonry",
   },
@@ -71,20 +71,20 @@ const galleryItems = [
 const beforeAfterItems = [
   {
     id: 1,
-    before: "/images/gallery/before-foundation.jpg",
-    after: "/images/gallery/after-foundation.jpg",
+    before: "/images/Gallery/9.jpg",
+    after: "/images/Gallery/10.jpg",
     title: "Foundation Parging & Resurfacing",
   },
   {
     id: 2,
-    before: "/images/gallery/before-basement.jpg",
-    after: "/images/gallery/after-basement.jpg",
+    before: "/images/Gallery/12.jpg",
+    after: "/images/Gallery/13.jpg",
     title: "Basement Wall Repair",
   },
   {
     id: 3,
-    before: "/images/gallery/before-exterior.jpg",
-    after: "/images/gallery/after-exterior.jpg",
+    before: "/images/Gallery/15.jpg",
+    after: "/images/Gallery/16.jpg",
     title: "Exterior Foundation Repair",
   },
 ]
@@ -141,7 +141,7 @@ export default function GalleryPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Button asChild size="lg">
-                <a href="tel:3432609276">
+                <a href="tel:+13432609276">
                   <Phone className="mr-2 h-4 w-4" />
                   <div className="flex flex-col items-start">
                     <span className="text-xs">CALL NOW</span>
@@ -149,19 +149,21 @@ export default function GalleryPage() {
                   </div>
                 </a>
               </Button>
-              <Button variant="outline" size="lg" className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10">
-                <Mail className="mr-2 h-4 w-4" />
-                <div className="flex flex-col items-start">
-                  <span className="text-xs">GET A FREE QUOTE</span>
-                  <span className="text-sm">Fast. Free. No Obligation.</span>
-                </div>
+              <Button variant="outline" size="lg" className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10" asChild>
+                <a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">
+                  <Mail className="mr-2 h-4 w-4" />
+                  <div className="flex flex-col items-start">
+                    <span className="text-xs">GET A FREE QUOTE</span>
+                    <span className="text-sm">Fast. Free. No Obligation.</span>
+                  </div>
+                </a>
               </Button>
             </div>
           </div>
           <div className="relative hidden lg:block">
             <div className="absolute left-0 top-0 h-full w-8 bg-primary" style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }} />
             <Image
-              src="/images/gallery-hero.jpg"
+              src="/images/Gallery/40.jpg"
               alt="Gallery Hero"
               fill
               className="object-cover"

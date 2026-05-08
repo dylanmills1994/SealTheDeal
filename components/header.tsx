@@ -14,16 +14,17 @@ import {
 import { useState } from "react"
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Contact", href: "/contact" },
+  { label: "Services", href: "#services" },
+  { label: "Work", href: "#work" },
+  { label: "Process", href: "#process" },
+  { label: "Contact", href: "#contact" },
 ]
 
 const serviceLinks = [
-  { label: "Foundation Repair", href: "/services/foundation-repair" },
-  { label: "Masonry Repair", href: "/services/masonry-repair" },
-  { label: "Concrete Work", href: "/services/concrete-work" },
-  { label: "Sealcoating & Asphalt Care", href: "/services/sealcoating" },
+  { label: "Services", href: "#services" },
+  { label: "Work", href: "#work" },
+  { label: "Process", href: "#process" },
+  { label: "Contact", href: "#contact" },
 ]
 
 export function Header() {
@@ -38,7 +39,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/images/logo.jpg"
+              src="/images/Gallery/Logo.jpg"
               alt="Seal The Deal Logo"
               width={50}
               height={50}
@@ -59,7 +60,7 @@ export function Header() {
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === link.href
+                  pathname === "/" && link.href === "#services"
                     ? "text-primary border-b-2 border-primary pb-1"
                     : "text-foreground"
                 }`}
@@ -84,7 +85,7 @@ export function Header() {
 
           {/* CTA Button */}
           <Button asChild size="lg" className="hidden lg:flex">
-            <a href="tel:3432609276">
+            <a href="tel:+13432609276">
               <Phone className="mr-2 h-4 w-4" />
               <div className="flex flex-col items-start text-left">
                 <span className="text-xs opacity-90">(343) 260-9276</span>
@@ -142,7 +143,7 @@ export function Header() {
                 ))}
               </div>
               <Button asChild className="mt-4 w-full">
-                <a href="tel:3432609276">
+                <a href="tel:+13432609276">
                   <Phone className="mr-2 h-4 w-4" />
                   Call (343) 260-9276
                 </a>

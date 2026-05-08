@@ -3,10 +3,10 @@ import Image from "next/image"
 import { Phone, Mail, MapPin, Facebook, Check } from "lucide-react"
 
 const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Services", href: "/#services" },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: "#services" },
+  { label: "Gallery", href: "#work" },
+  { label: "Services", href: "#process" },
+  { label: "Contact", href: "#contact" },
 ]
 
 const services = [
@@ -25,7 +25,7 @@ export function Footer() {
           <div>
             <div className="mb-4 flex items-center gap-3">
               <Image
-                src="/images/logo.jpg"
+                src="/images/Gallery/Logo.jpg"
                 alt="Seal The Deal Logo"
                 width={50}
                 height={50}
@@ -99,14 +99,14 @@ export function Footer() {
               </div>
             </div>
             <a
-              href="tel:3432609276"
+              href="tel:+13432609276"
               className="flex items-center gap-2 text-sm text-primary font-medium hover:underline"
             >
               <Phone className="h-4 w-4" />
               (343) 260-9276
             </a>
             <a
-              href="mailto:sealthedeal1994@gmail.com"
+              href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request"
               className="mt-2 flex items-center gap-2 text-sm text-primary hover:underline"
             >
               <Mail className="h-4 w-4" />
