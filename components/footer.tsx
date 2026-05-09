@@ -124,7 +124,7 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
             &copy; {new Date().getFullYear()} Seal The Deal Asphalt Care & Masonry. All Rights Reserved.
           </p>
           <p className="text-xs text-secondary-foreground/60">
-            {cms?.text.footer_tagline || "Fully Insured | Trusted | Local"}
+            {text.footer_tagline || "Fully Insured | Trusted | Local"}
           </p>
         </div>
       </div>
