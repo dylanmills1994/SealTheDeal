@@ -13,6 +13,8 @@ const navLinks = [
   { label: "Process", section: "process" },
 ]
 
+const extraLinks = [{ label: "Gallery", href: "/gallery" }]
+
 const quoteEmail = "sealthedeal1994@gmail.com"
 const quoteSubject = "Seal The Deal Quote Request"
 
@@ -133,6 +135,9 @@ export function Header() {
               >
                 Contact
               </button>
+              {extraLinks.map((link) => (
+                <Link key={link.label} href={link.href} className={`text-sm font-medium transition-colors hover:text-primary ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>
+              ))}
             </nav>
 
             <Button asChild size="lg" className="hidden lg:flex">
@@ -177,6 +182,9 @@ export function Header() {
                 >
                   Contact
                 </button>
+                {extraLinks.map((link) => (
+                  <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>
+                ))}
                 <Button asChild className="mt-4 w-full">
                   <a href="tel:+13432609276">
                     <Phone className="mr-2 h-4 w-4" />

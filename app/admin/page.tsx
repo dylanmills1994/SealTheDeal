@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
@@ -7,34 +8,37 @@ const COOKIE_NAME = "seal_admin_session"
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 const MAX_BYTES = 8 * 1024 * 1024
 
-async function isAuthed() {
-  const store = await cookies()
-  return store.get(COOKIE_NAME)?.value === "1"
+const textLabels: Record<string, string> = {
+  hero_eyebrow: "Small intro line",
+  hero_headline: "Main homepage headline",
+  hero_subheadline: "Homepage intro text",
+  services_heading: "Services section heading",
+  process_heading: "Process section heading",
+  cta_heading: "Call-to-action heading",
+  footer_tagline: "Footer tagline",
+  phone_display: "Phone number",
+  email_address: "Email address",
 }
 
-async function login(formData: FormData) {
-  "use server"
-  const pass = String(formData.get("password") || "")
-  if (!process.env.SEAL_ADMIN_PASSWORD || pass !== process.env.SEAL_ADMIN_PASSWORD) return redirect("/admin?error=Invalid+password")
-  const store = await cookies()
-  store.set(COOKIE_NAME, "1", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" })
-  redirect("/admin")
+const imageLabels: Record<string, string> = {
+  hero_logo: "Main logo",
+  services_sealcoating: "Sealcoating image",
+  services_crack_filling: "Crack filling image",
+  services_masonry: "Masonry image",
+  services_concrete: "Concrete image",
 }
 
-async function logout() {
-  "use server"
-  const store = await cookies()
-  store.delete(COOKIE_NAME)
-  redirect("/admin")
-}
+async function isAuthed() { const store = await cookies(); return store.get(COOKIE_NAME)?.value === "1" }
+
+async function login(formData: FormData) { "use server"; const pass = String(formData.get("password") || ""); if (!process.env.SEAL_ADMIN_PASSWORD || pass !== process.env.SEAL_ADMIN_PASSWORD) return redirect("/admin?error=Invalid+password"); (await cookies()).set(COOKIE_NAME, "1", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" }); redirect("/admin") }
+async function logout() { "use server"; (await cookies()).delete(COOKIE_NAME); redirect("/admin") }
 
 async function saveText(formData: FormData) {
   "use server"
   if (!(await isAuthed())) redirect("/admin")
-  const entries = Object.fromEntries(formData.entries())
-  for (const [id, value] of Object.entries(entries)) await upsertContent(id, String(value))
-  revalidatePath("/")
-  redirect("/admin?success=Text+saved")
+  for (const [id, value] of Object.entries(Object.fromEntries(formData.entries()))) await upsertContent(id, String(value))
+  revalidatePath("/"); revalidatePath("/gallery")
+  redirect("/admin?success=Website+text+saved")
 }
 
 async function uploadImage(formData: FormData) {
@@ -43,18 +47,41 @@ async function uploadImage(formData: FormData) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) redirect("/admin?error=Missing+Supabase+env")
-  revalidatePath("/")
+
+  const slot = String(formData.get("id") || "")
+  const file = formData.get("file") as File | null
+  const alt = String(formData.get("alt") || slot)
+  if (!slot || !file) redirect("/admin?error=Missing+image+data")
+  if (!ALLOWED_TYPES.includes(file.type) || file.size > MAX_BYTES) redirect("/admin?error=Invalid+file")
+
+  const ext = file.type.split("/")[1] || "jpg"
+  const path = `${slot}/${Date.now()}.${ext}`
+  const upload = await fetch(`${url}/storage/v1/object/seal-the-deal-images/${path}`, {
+    method: "POST",
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": file.type, "x-upsert": "true" },
+    body: Buffer.from(await file.arrayBuffer()),
+  })
+  if (!upload.ok) redirect("/admin?error=Upload+failed")
+
+  await fetch(`${url}/rest/v1/site_images`, {
+    method: "POST",
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates" },
+    body: JSON.stringify({ slot, label: slot, image_url: `${url}/storage/v1/object/public/seal-the-deal-images/${path}`, storage_path: path, alt_text: alt, sort_order: 0, is_active: true }),
+  })
+
+  revalidatePath("/"); revalidatePath("/gallery"); revalidatePath("/admin")
   redirect("/admin?success=Image+updated")
 }
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
-  const authed = await isAuthed()
-  const { text, images } = await getCmsContent()
-  const params = await searchParams
+  const authed = await isAuthed(); const { text, images } = await getCmsContent(); const params = await searchParams
+  if (!authed) return <main className="mx-auto min-h-screen max-w-md px-4 py-14"><div className="rounded-lg border bg-card p-6 shadow-sm"><h1 className="text-2xl font-black uppercase">Seal The Deal Admin</h1><p className="mt-2 text-sm text-muted-foreground">Update website text, images, and gallery content.</p><form action={login} className="mt-5 space-y-3"><input name="password" type="password" className="w-full rounded-md border border-border bg-background px-3 py-2" placeholder="Owner password" required /><button className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground">Login</button>{params.error && <p className="text-sm text-red-600">{params.error}</p>}</form></div></main>
 
-  if (!authed) {
-    return <main className="mx-auto max-w-md p-6"><h1 className="mb-4 text-2xl font-bold">Admin Login</h1><form action={login} className="space-y-3"><input name="password" type="password" className="w-full rounded border p-2" placeholder="Owner password" required /><button className="w-full rounded bg-black px-4 py-2 text-white">Login</button>{params.error && <p className="text-sm text-red-600">{params.error}</p>}</form></main>
-  }
+  return <main className="mx-auto max-w-7xl space-y-6 px-4 py-8"><div className="flex flex-wrap items-start justify-between gap-3"><div><h1 className="text-3xl font-black uppercase">Seal The Deal Admin</h1><p className="text-muted-foreground">Update website text, images, and gallery content.</p></div><form action={logout}><button className="rounded-md border border-border px-4 py-2 text-sm font-semibold">Logout</button></form></div>{params.success && <p className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-green-700">{params.success}</p>}{params.error && <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-red-700">{params.error}</p>}
 
-  return <main className="mx-auto max-w-4xl space-y-6 p-4 md:p-8"><div className="flex items-center justify-between"><h1 className="text-2xl font-bold">Website Admin</h1><form action={logout}><button className="rounded border px-3 py-2">Logout</button></form></div>{params.success && <p className="text-green-600">{params.success}</p>}{params.error && <p className="text-red-600">{params.error}</p>}<section className="rounded border p-4"><h2 className="mb-3 font-semibold">Text Content</h2><form action={saveText} className="grid gap-3 md:grid-cols-2">{Object.entries(text).map(([k,v]) => <label key={k} className="text-sm">{k.replaceAll("_"," ")}<textarea name={k} defaultValue={v} className="mt-1 min-h-20 w-full rounded border p-2"/></label>)}<button className="md:col-span-2 rounded bg-black px-4 py-2 text-white">Save text</button></form></section><section className="rounded border p-4"><h2 className="mb-3 font-semibold">Images</h2><div className="grid gap-4 md:grid-cols-2">{Object.entries(images).map(([id,img]) => <form key={id} action={uploadImage} className="rounded border p-3"><p className="mb-2 text-sm font-medium">{id}</p><img src={img.url} alt={img.alt} className="mb-2 h-28 w-full rounded object-cover"/><input type="hidden" name="id" value={id}/><input required name="file" type="file" accept=".jpg,.jpeg,.png,.webp" className="mb-2 text-sm"/><button className="w-full rounded bg-black px-3 py-2 text-white">Replace image</button></form>)}</div></section></main>
+  <section className="rounded-lg border bg-card p-5"><h2 className="text-xl font-bold">Website Text</h2><form action={saveText} className="mt-4 grid gap-4 md:grid-cols-2">{Object.entries(text).map(([k,v]) => <label key={k} className="space-y-2 text-sm font-medium"><span>{textLabels[k] || k}</span><textarea name={k} defaultValue={v} className="min-h-24 w-full rounded-md border border-border bg-background px-3 py-2"/></label>)}<button className="md:col-span-2 rounded-md bg-primary px-4 py-2 font-semibold text-primary-foreground">Save website text</button></form></section>
+
+  <section className="rounded-lg border bg-card p-5"><h2 className="text-xl font-bold">Main Website Images</h2><div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{Object.entries(images).filter(([slot]) => !slot.startsWith("gallery_")).map(([id,img]) => <form key={id} action={uploadImage} className="rounded-md border p-3"><p className="mb-2 text-sm font-semibold">{imageLabels[id] || id}</p><Image src={img.url} alt={img.alt} width={600} height={300} className="mb-2 h-40 w-full rounded-md object-cover" /><input type="hidden" name="id" value={id}/><input type="hidden" name="alt" value={img.alt}/><input required name="file" type="file" accept=".jpg,.jpeg,.png,.webp" className="mb-2 w-full text-sm"/><button className="w-full rounded-md bg-primary px-3 py-2 text-primary-foreground">Replace image</button></form>)}</div></section>
+
+  <section className="rounded-lg border bg-card p-5"><h2 className="text-xl font-bold">Gallery Images</h2><div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{Object.entries(images).filter(([slot]) => slot.startsWith("gallery_")).slice(0,10).map(([id,img]) => <form key={id} action={uploadImage} className="rounded-md border p-3"><p className="mb-2 text-sm font-semibold uppercase">{id}</p><Image src={img.url} alt={img.alt} width={600} height={300} className="mb-2 h-40 w-full rounded-md object-cover" /><input type="hidden" name="id" value={id}/><input name="alt" defaultValue={img.alt} className="mb-2 w-full rounded-md border border-border px-3 py-2 text-sm" placeholder="Caption (optional)"/><input required name="file" type="file" accept=".jpg,.jpeg,.png,.webp" className="mb-2 w-full text-sm"/><button className="w-full rounded-md bg-primary px-3 py-2 text-primary-foreground">Upload / replace</button></form>)}</div></section></main>
 }
