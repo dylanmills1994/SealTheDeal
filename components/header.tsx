@@ -11,13 +11,11 @@ const navLinks = [
   { label: "Home", href: "/", section: "" },
   { label: "Services", href: "/#services", section: "services" },
   { label: "Work", href: "/#work", section: "work" },
-  { label: "Contact", href: "/#contact", section: "contact" },
+  { label: "Contact", href: "/#contact", section: "contact", opensModal: true },
 ]
 
 const extraLinks = [{ label: "Gallery", href: "/gallery" }]
 
-const quoteEmail = "sealthedeal1994@gmail.com"
-const quoteSubject = "Seal The Deal Quote Request"
 
 export function Header() {
   const pathname = usePathname()
@@ -25,9 +23,14 @@ export function Header() {
   const [activeSection, setActiveSection] = useState("")
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   const openContactModal = () => setIsContactModalOpen(true)
-  const closeContactModal = () => setIsContactModalOpen(false)
+  const closeContactModal = () => {
+    setIsContactModalOpen(false)
+    setSubmitMessage(null)
+  }
 
   useEffect(() => {
     if (pathname !== "/") return
@@ -75,12 +78,31 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [isContactModalOpen])
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const body = [`Name: ${formData.name}`, `Phone: ${formData.phone}`, `Email: ${formData.email}`, "", "Message:", formData.message].join("\n")
-    const mailtoHref = `mailto:${quoteEmail}?subject=${encodeURIComponent(quoteSubject)}&body=${encodeURIComponent(body)}`
-    window.location.href = mailtoHref
-    closeContactModal()
+    if (isSubmitting) return
+    setIsSubmitting(true)
+    setSubmitMessage(null)
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, source: window.location.pathname }),
+      })
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Failed to send quote request")
+      }
+
+      setSubmitMessage({ type: "success", text: "Thanks! Your quote request was sent successfully." })
+      setFormData({ name: "", phone: "", email: "", message: "" })
+    } catch {
+      setSubmitMessage({ type: "error", text: "We couldn't send your request right now. Please try again." })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -99,6 +121,18 @@ export function Header() {
             <nav className="hidden items-center gap-6 lg:flex">
               {navLinks.map((link) => {
                 const isActive = pathname === "/" ? activeSection === link.section : pathname === link.href
+                if (link.opensModal) {
+                  return (
+                    <button
+                      key={link.label}
+                      type="button"
+                      onClick={openContactModal}
+                      className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"}`}
+                    >
+                      {link.label}
+                    </button>
+                  )
+                }
                 return <Link key={link.label} href={link.href} className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"}`}>{link.label}</Link>
               })}
               {extraLinks.map((link) => (
@@ -107,12 +141,13 @@ export function Header() {
             </nav>
 
             <Button asChild size="lg" className="hidden lg:flex"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" /><div className="flex flex-col items-start text-left"><span className="text-xs opacity-90">(343) 260-9276</span><span className="text-sm font-bold">CALL NOW</span></div></a></Button>
+            <Button asChild size="lg" variant="outline" className="hidden lg:flex"><a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">Request Quote</a></Button>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}</Button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-b border-border bg-background lg:hidden"><div className="mx-auto max-w-7xl px-4 py-4"><nav className="flex flex-col gap-4">{navLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}{extraLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}<Button asChild className="mt-4 w-full"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" />Call (343) 260-9276</a></Button></nav></div></div>
+          <div className="border-b border-border bg-background lg:hidden"><div className="mx-auto max-w-7xl px-4 py-4"><nav className="flex flex-col gap-4">{navLinks.map((link) => link.opensModal ? <button key={link.label} type="button" onClick={() => { openContactModal(); setMobileMenuOpen(false) }} className={`text-left text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</button> : <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}{extraLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}<Button asChild className="mt-4 w-full"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" />Call (343) 260-9276</a></Button><Button asChild variant="outline" className="w-full"><a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">Request Quote</a></Button></nav></div></div>
         )}
       </header>
 
@@ -120,7 +155,7 @@ export function Header() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4" onClick={closeContactModal}>
           <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg" onClick={(event) => event.stopPropagation()}>
             <div className="mb-4 flex items-center justify-between"><h2 className="text-lg font-bold">Request a Quote</h2><button type="button" onClick={closeContactModal} className="rounded p-1 text-muted-foreground hover:text-foreground" aria-label="Close contact form"><X className="h-5 w-5" /></button></div>
-            <form onSubmit={handleSubmit} className="space-y-3"><input required placeholder="Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required placeholder="Phone" value={formData.phone} onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><textarea required placeholder="Message / job details" value={formData.message} onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))} className="min-h-28 w-full rounded border border-border px-3 py-2 text-sm" /><Button type="submit" className="w-full">Submit</Button></form>
+            <form onSubmit={handleSubmit} className="space-y-3"><input required placeholder="Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required placeholder="Phone" value={formData.phone} onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><textarea required placeholder="Message / job details" value={formData.message} onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))} className="min-h-28 w-full rounded border border-border px-3 py-2 text-sm" />{submitMessage && <p className={`text-sm ${submitMessage.type === "success" ? "text-green-600" : "text-red-600"}`}>{submitMessage.text}</p>}<Button type="submit" className="w-full" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Submit"}</Button></form>
           </div>
         </div>
       )}
