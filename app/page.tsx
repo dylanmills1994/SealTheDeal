@@ -16,8 +16,8 @@ export default async function Home() {
         <Hero cms={cms} />
         <Features />
         <Services cms={cms} />
-        <Projects />
-        <CtaBanner />
+        <Projects cms={cms} />
+        <CtaBanner cms={cms} />
       </main>
       <Footer cms={cms} />
     </div>

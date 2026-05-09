@@ -21,7 +21,7 @@ const projects = [
   },
 ]
 
-export function Projects() {
+export function Projects({ cms }: { cms: { text: Record<string, string> } }) {
   return (
     <section id="work" className="bg-muted/30 py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
@@ -31,7 +31,7 @@ export function Projects() {
             Recent Projects
           </p>
           <h2 className="text-3xl font-bold text-foreground md:text-4xl">
-            Built with Pride. Backed by Quality.
+            {cms.text.projects_heading || "Built with Pride. Backed by Quality."}
           </h2>
         </div>
 
@@ -61,8 +61,8 @@ export function Projects() {
         {/* CTA Button */}
         <div className="mt-10 flex justify-center">
           <Button variant="outline" size="lg" asChild>
-            <a href="/#work">
-              See All Projects
+            <a href="/gallery">
+              {cms.text.projects_button_label || "See All Projects"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </a>
           </Button>

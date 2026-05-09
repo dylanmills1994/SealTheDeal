@@ -15,6 +15,25 @@ export const CMS_TEXT_DEFAULTS: Record<string, string> = {
   footer_tagline: "Fully Insured | Trusted | Local",
   phone_display: DEFAULT_PHONE_DISPLAY,
   email_address: DEFAULT_EMAIL,
+
+  phone_tel_link: DEFAULT_PHONE_HREF,
+  email_mailto_link: DEFAULT_EMAIL_HREF,
+  facebook_url: DEFAULT_FACEBOOK_URL,
+  nav_services_label: "Services",
+  nav_work_label: "Work",
+  nav_process_label: "Process",
+  nav_contact_label: "Contact",
+  nav_gallery_label: "Gallery",
+  gallery_heading: "Project Gallery",
+  gallery_intro: "Real results from Seal The Deal Asphalt Care & Masonry projects",
+  projects_heading: "Built with Pride. Backed by Quality.",
+  projects_button_label: "See All Projects",
+  cta_title: "Ready to Start Your Project?",
+  cta_subtitle: "Call or email us today for your free estimate!",
+  cta_phone_helper: "Call or Text",
+  cta_email_helper: "Email Us",
+  footer_description: "Asphalt care, masonry, concrete and foundation services you can count on. Insured. Trusted. Local.",
+  footer_facebook_label: "Follow us on Facebook",
 }
 
 export const CMS_IMAGE_DEFAULTS: Record<string, { url: string; alt: string }> = {

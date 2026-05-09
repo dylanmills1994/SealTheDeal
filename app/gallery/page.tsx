@@ -16,8 +16,8 @@ export default async function GalleryPage() {
       <main className="flex-1">
         <section className="border-b bg-secondary py-14 text-secondary-foreground">
           <div className="mx-auto max-w-7xl px-4">
-            <h1 className="text-4xl font-black uppercase md:text-5xl">Project Gallery</h1>
-            <p className="mt-3 max-w-2xl text-secondary-foreground/80">Real results from Seal The Deal Asphalt Care & Masonry projects in Prescott, Ontario and nearby communities.</p>
+            <h1 className="text-4xl font-black uppercase md:text-5xl">{cms.text.gallery_heading || "Project Gallery"}</h1>
+            <p className="mt-3 max-w-2xl text-secondary-foreground/80">{cms.text.gallery_intro || "Real results from Seal The Deal Asphalt Care & Masonry projects"}</p>
           </div>
         </section>
         <section className="mx-auto max-w-7xl px-4 py-10">
