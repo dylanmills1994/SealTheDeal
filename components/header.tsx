@@ -10,7 +10,6 @@ import { useEffect, useState, type FormEvent } from "react"
 const navLinks = [
   { label: "Services", section: "services" },
   { label: "Work", section: "work" },
-  { label: "Process", section: "process" },
 ]
 
 const extraLinks = [{ label: "Gallery", href: "/gallery" }]
