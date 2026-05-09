@@ -5,19 +5,21 @@ import { Services } from "@/components/services"
 import { Projects } from "@/components/projects"
 import { CtaBanner } from "@/components/cta-banner"
 import { Footer } from "@/components/footer"
+import { getCmsContent } from "@/lib/cms"
 
-export default function Home() {
+export default async function Home() {
+  const cms = await getCmsContent()
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <Hero />
+        <Hero cms={cms} />
         <Features />
-        <Services />
+        <Services cms={cms} />
         <Projects />
         <CtaBanner />
       </main>
-      <Footer />
+      <Footer cms={cms} />
     </div>
   )
 }

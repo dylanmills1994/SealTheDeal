@@ -59,7 +59,7 @@ const contactInfo = [
     title: "Facebook / Messenger",
     value: "Seal The Deal Asphalt Care & Masonry",
     subtext: "Message us on Facebook",
-    href: "https://facebook.com",
+    href: "https://www.facebook.com/profile.php?id=100091760627380",
   },
   {
     icon: Clock,
@@ -160,7 +160,7 @@ export default function ContactPage() {
                 className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10"
                 asChild
               >
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/profile.php?id=100091760627380" target="_blank" rel="noopener noreferrer">
                   <Facebook className="mr-2 h-4 w-4" />
                   <div className="flex flex-col items-start">
                     <span className="text-xs">MESSAGE US</span>
