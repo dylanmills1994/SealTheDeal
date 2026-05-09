@@ -16,8 +16,6 @@ const navLinks = [
 
 const extraLinks = [{ label: "Gallery", href: "/gallery" }]
 
-const quoteEmail = "sealthedeal1994@gmail.com"
-const quoteSubject = "Seal The Deal Quote Request"
 
 export function Header() {
   const pathname = usePathname()
@@ -25,9 +23,14 @@ export function Header() {
   const [activeSection, setActiveSection] = useState("")
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   const openContactModal = () => setIsContactModalOpen(true)
-  const closeContactModal = () => setIsContactModalOpen(false)
+  const closeContactModal = () => {
+    setIsContactModalOpen(false)
+    setSubmitMessage(null)
+  }
 
   useEffect(() => {
     if (pathname !== "/") return
@@ -75,12 +78,31 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [isContactModalOpen])
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const body = [`Name: ${formData.name}`, `Phone: ${formData.phone}`, `Email: ${formData.email}`, "", "Message:", formData.message].join("\n")
-    const mailtoHref = `mailto:${quoteEmail}?subject=${encodeURIComponent(quoteSubject)}&body=${encodeURIComponent(body)}`
-    window.location.href = mailtoHref
-    closeContactModal()
+    if (isSubmitting) return
+    setIsSubmitting(true)
+    setSubmitMessage(null)
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, source: window.location.pathname }),
+      })
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Failed to send quote request")
+      }
+
+      setSubmitMessage({ type: "success", text: "Thanks! Your quote request was sent successfully." })
+      setFormData({ name: "", phone: "", email: "", message: "" })
+    } catch {
+      setSubmitMessage({ type: "error", text: "We couldn't send your request right now. Please try again." })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -133,7 +155,7 @@ export function Header() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4" onClick={closeContactModal}>
           <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg" onClick={(event) => event.stopPropagation()}>
             <div className="mb-4 flex items-center justify-between"><h2 className="text-lg font-bold">Request a Quote</h2><button type="button" onClick={closeContactModal} className="rounded p-1 text-muted-foreground hover:text-foreground" aria-label="Close contact form"><X className="h-5 w-5" /></button></div>
-            <form onSubmit={handleSubmit} className="space-y-3"><input required placeholder="Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required placeholder="Phone" value={formData.phone} onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><textarea required placeholder="Message / job details" value={formData.message} onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))} className="min-h-28 w-full rounded border border-border px-3 py-2 text-sm" /><Button type="submit" className="w-full">Submit</Button></form>
+            <form onSubmit={handleSubmit} className="space-y-3"><input required placeholder="Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required placeholder="Phone" value={formData.phone} onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} className="w-full rounded border border-border px-3 py-2 text-sm" /><textarea required placeholder="Message / job details" value={formData.message} onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))} className="min-h-28 w-full rounded border border-border px-3 py-2 text-sm" />{submitMessage && <p className={`text-sm ${submitMessage.type === "success" ? "text-green-600" : "text-red-600"}`}>{submitMessage.text}</p>}<Button type="submit" className="w-full" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Submit"}</Button></form>
           </div>
         </div>
       )}
