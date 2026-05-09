@@ -53,7 +53,7 @@ export function Hero() {
                 </a>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <a href="#contact">
+                <a href="#quote-form">
                   <Mail className="mr-2 h-4 w-4" />
                   Request a Quote
                 </a>

@@ -3,7 +3,7 @@ import { Phone, Mail, Facebook } from "lucide-react"
 export function CtaBanner() {
   return (
     <section id="contact" className="bg-primary py-6">
-      <div className="mx-auto max-w-7xl px-4">
+      <div id="quote-form" className="mx-auto max-w-7xl px-4">
         <div className="flex flex-col items-center justify-between gap-6 lg:flex-row">
           {/* Tagline */}
           <div className="flex items-center gap-3">

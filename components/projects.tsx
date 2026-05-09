@@ -61,8 +61,8 @@ export function Projects() {
         {/* CTA Button */}
         <div className="mt-10 flex justify-center">
           <Button variant="outline" size="lg" asChild>
-            <a href="#contact">
-              View More Projects
+            <a href="/#work">
+              See All Projects
               <ArrowRight className="ml-2 h-4 w-4" />
             </a>
           </Button>
