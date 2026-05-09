@@ -11,7 +11,7 @@ const navLinks = [
   { label: "Home", href: "/", section: "" },
   { label: "Services", href: "/#services", section: "services" },
   { label: "Work", href: "/#work", section: "work" },
-  { label: "Contact", href: "/#contact", section: "contact" },
+  { label: "Contact", href: "/#contact", section: "contact", opensModal: true },
 ]
 
 const extraLinks = [{ label: "Gallery", href: "/gallery" }]
@@ -99,6 +99,18 @@ export function Header() {
             <nav className="hidden items-center gap-6 lg:flex">
               {navLinks.map((link) => {
                 const isActive = pathname === "/" ? activeSection === link.section : pathname === link.href
+                if (link.opensModal) {
+                  return (
+                    <button
+                      key={link.label}
+                      type="button"
+                      onClick={openContactModal}
+                      className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"}`}
+                    >
+                      {link.label}
+                    </button>
+                  )
+                }
                 return <Link key={link.label} href={link.href} className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"}`}>{link.label}</Link>
               })}
               {extraLinks.map((link) => (
@@ -107,12 +119,13 @@ export function Header() {
             </nav>
 
             <Button asChild size="lg" className="hidden lg:flex"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" /><div className="flex flex-col items-start text-left"><span className="text-xs opacity-90">(343) 260-9276</span><span className="text-sm font-bold">CALL NOW</span></div></a></Button>
+            <Button asChild size="lg" variant="outline" className="hidden lg:flex"><a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">Request Quote</a></Button>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}</Button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-b border-border bg-background lg:hidden"><div className="mx-auto max-w-7xl px-4 py-4"><nav className="flex flex-col gap-4">{navLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}{extraLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}<Button asChild className="mt-4 w-full"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" />Call (343) 260-9276</a></Button></nav></div></div>
+          <div className="border-b border-border bg-background lg:hidden"><div className="mx-auto max-w-7xl px-4 py-4"><nav className="flex flex-col gap-4">{navLinks.map((link) => link.opensModal ? <button key={link.label} type="button" onClick={() => { openContactModal(); setMobileMenuOpen(false) }} className={`text-left text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</button> : <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}{extraLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}<Button asChild className="mt-4 w-full"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" />Call (343) 260-9276</a></Button><Button asChild variant="outline" className="w-full"><a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">Request Quote</a></Button></nav></div></div>
         )}
       </header>
 
