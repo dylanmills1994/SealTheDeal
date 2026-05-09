@@ -27,9 +27,9 @@ export function Features() {
   return (
     <section id="process" className="border-y border-border bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8">
           {features.map((feature) => (
-            <div key={feature.title} className="flex items-start gap-4">
+            <div key={feature.title} className="flex items-start gap-3 rounded-lg bg-background/70 p-4 sm:gap-4 sm:p-0 sm:bg-transparent">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 <feature.icon className="h-6 w-6 text-primary" />
               </div>
