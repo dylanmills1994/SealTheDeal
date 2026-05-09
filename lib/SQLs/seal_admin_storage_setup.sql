@@ -22,11 +22,18 @@ begin
   end if;
 end $$;
 
+create extension if not exists pgcrypto;
+
 create table if not exists public.site_images (
-  id text primary key,
+  id uuid primary key default gen_random_uuid(),
+  slot text unique not null,
+  label text,
   image_url text not null,
+  storage_path text,
   alt_text text,
-  updated_at timestamptz not null default now()
+  sort_order integer,
+  is_active boolean default true,
+  updated_at timestamptz default now()
 );
 
 alter table public.site_images
@@ -37,9 +44,10 @@ alter table public.site_images
   add column if not exists is_active boolean default true;
 
 update public.site_images
-set slot = coalesce(slot, id),
-    label = coalesce(label, id)
-where slot is null or label is null;
+set slot = coalesce(slot, 'legacy_' || left(id::text, 8))
+where slot is null;
+
+create unique index if not exists site_images_slot_unique_idx on public.site_images (slot);
 
 alter table public.site_images enable row level security;
 

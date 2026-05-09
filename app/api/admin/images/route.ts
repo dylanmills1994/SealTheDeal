@@ -3,13 +3,14 @@ import { cookies } from "next/headers"
 
 const COOKIE_NAME = "seal_admin_session"
 const BUCKET = "site-assets"
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"]
 const MAX_BYTES = 8 * 1024 * 1024
 
 function getExtension(mimeType: string) {
   if (mimeType === "image/jpeg") return "jpg"
   if (mimeType === "image/png") return "png"
   if (mimeType === "image/webp") return "webp"
+  if (mimeType === "image/gif") return "gif"
   return null
 }
 
@@ -39,14 +40,13 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData()
     const slot = String(formData.get("id") || "").trim()
-    const alt = String(formData.get("alt") || slot).trim()
     const file = formData.get("file")
 
     if (!slot || !(file instanceof File) || file.size === 0) {
       return NextResponse.json({ error: "Missing slot or file" }, { status: 400 })
     }
     if (!ALLOWED_TYPES.includes(file.type) || file.size > MAX_BYTES) {
-      return NextResponse.json({ error: "Upload must be jpg, jpeg, png, or webp under 8MB" }, { status: 400 })
+      return NextResponse.json({ error: "Upload must be jpg, jpeg, png, webp, or gif under 8MB" }, { status: 400 })
     }
 
     const ext = getExtension(file.type)
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     }
 
     const imageUrl = `${url}/storage/v1/object/public/${BUCKET}/${storagePath}`
-    const upsert = await fetch(`${url}/rest/v1/site_images?id=eq.${encodeURIComponent(slot)}`, {
+    const upsert = await fetch(`${url}/rest/v1/site_images?on_conflict=slot`, {
       method: "POST",
       headers: {
         apikey: serviceRoleKey,
@@ -77,13 +77,9 @@ export async function POST(request: Request) {
         Prefer: "resolution=merge-duplicates",
       },
       body: JSON.stringify({
-        id: slot,
         slot,
-        label: slot,
         image_url: imageUrl,
         storage_path: storagePath,
-        alt_text: alt || null,
-        sort_order: slot.startsWith("gallery_") ? 200 : 100,
         is_active: true,
         updated_at: new Date().toISOString(),
       }),
@@ -93,7 +89,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `site_images upsert failed: ${await upsert.text()}` }, { status: 502 })
     }
 
-    return NextResponse.json({ success: true, imageUrl, slot, alt })
+    return NextResponse.json({ success: true, imageUrl, slot })
   } catch {
     return NextResponse.json({ error: "Unexpected upload error" }, { status: 500 })
   }
