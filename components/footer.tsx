@@ -119,13 +119,31 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
 
       {/* Copyright */}
       <div className="border-t border-secondary-foreground/10">
-        <div className="mx-auto max-w-7xl px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 md:flex-row">
           <p className="text-xs text-secondary-foreground/60">
             &copy; {new Date().getFullYear()} Seal The Deal Asphalt Care & Masonry. All Rights Reserved.
           </p>
-          <p className="text-xs text-secondary-foreground/60">
-            {text.footer_tagline || "Fully Insured | Trusted | Local"}
-          </p>
+          <div className="flex flex-col items-center gap-3 md:items-end">
+            <p className="text-xs text-secondary-foreground/60">
+              {text.footer_tagline || "Fully Insured | Trusted | Local"}
+            </p>
+            <a
+              href="https://kintask.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-sm text-xs text-secondary-foreground/50 transition-colors hover:text-secondary-foreground/80"
+              aria-label="Made by KinTask"
+            >
+              <Image
+                src="/images/Gallery/logoK.png"
+                alt="KinTask logo"
+                width={16}
+                height={16}
+                className="h-4 w-4 object-contain"
+              />
+              <span>Made by KinTask</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
