@@ -53,3 +53,5 @@ export const CMS_IMAGE_DEFAULTS: Record<string, { url: string; alt: string }> = 
   gallery_09: { url: "/images/Gallery/9.jpg", alt: "Sealcoating" },
   gallery_10: { url: "/images/Gallery/10.jpg", alt: "Masonry" },
 }
+
+export const CONTACT_MODAL_EVENT = "sealthedeal:open-contact-modal"
