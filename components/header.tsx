@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Phone, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState, type FormEvent } from "react"
+import { CONTACT_MODAL_EVENT } from "@/lib/site-config"
 
 const navLinks = [
   { label: "Home", href: "/", section: "" },
@@ -68,6 +69,12 @@ export function Header() {
       window.removeEventListener("hashchange", syncActive)
     }
   }, [pathname])
+
+  useEffect(() => {
+    const onOpen = () => setIsContactModalOpen(true)
+    window.addEventListener(CONTACT_MODAL_EVENT, onOpen)
+    return () => window.removeEventListener(CONTACT_MODAL_EVENT, onOpen)
+  }, [])
 
   useEffect(() => {
     if (!isContactModalOpen) return
@@ -141,13 +148,13 @@ export function Header() {
             </nav>
 
             <Button asChild size="lg" className="hidden lg:flex"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" /><div className="flex flex-col items-start text-left"><span className="text-xs opacity-90">(343) 260-9276</span><span className="text-sm font-bold">CALL NOW</span></div></a></Button>
-            <Button asChild size="lg" variant="outline" className="hidden lg:flex"><a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">Request Quote</a></Button>
+            <Button size="lg" variant="outline" className="hidden lg:flex" onClick={openContactModal}>Request Quote</Button>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}</Button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-b border-border bg-background lg:hidden"><div className="mx-auto max-w-7xl px-4 py-4"><nav className="flex flex-col gap-4">{navLinks.map((link) => link.opensModal ? <button key={link.label} type="button" onClick={() => { openContactModal(); setMobileMenuOpen(false) }} className={`text-left text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</button> : <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}{extraLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}<Button asChild className="mt-4 w-full"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" />Call (343) 260-9276</a></Button><Button asChild variant="outline" className="w-full"><a href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request">Request Quote</a></Button></nav></div></div>
+          <div className="border-b border-border bg-background lg:hidden"><div className="mx-auto max-w-7xl px-4 py-4"><nav className="flex flex-col gap-4">{navLinks.map((link) => link.opensModal ? <button key={link.label} type="button" onClick={() => { openContactModal(); setMobileMenuOpen(false) }} className={`text-left text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</button> : <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === "/" ? activeSection === link.section ? "text-primary" : "text-foreground" : pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}{extraLinks.map((link) => <Link key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground"}`}>{link.label}</Link>)}<Button asChild className="mt-4 w-full"><a href="tel:+13432609276"><Phone className="mr-2 h-4 w-4" />Call (343) 260-9276</a></Button><Button variant="outline" className="w-full" onClick={() => { openContactModal(); setMobileMenuOpen(false) }}>Request Quote</Button></nav></div></div>
         )}
       </header>
 
