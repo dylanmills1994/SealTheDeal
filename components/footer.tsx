@@ -136,7 +136,7 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
               aria-label="Made by KinTask"
             >
               <Image
-                src="/images/Gallery/logoK.png"
+                src="/images/Gallery/logoK-Photoroom.png"
                 alt="KinTask logo"
                 width={16}
                 height={16}
