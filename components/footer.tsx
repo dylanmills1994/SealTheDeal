@@ -17,6 +17,7 @@ const services = [
 ]
 
 export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
+  const text = cms?.text || {}
   return (
     <footer className="bg-secondary text-secondary-foreground">
       <div className="mx-auto max-w-7xl px-4 py-12 lg:py-16">
@@ -39,16 +40,16 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
               </div>
             </div>
             <p className="text-sm text-secondary-foreground/80 leading-relaxed">
-              Asphalt care, masonry, concrete and foundation services you can count on. Insured. Trusted. Local.
+              {text.footer_description || "Asphalt care, masonry, concrete and foundation services you can count on. Insured. Trusted. Local."}
             </p>
             <a
-              href="https://www.facebook.com/profile.php?id=100091760627380"
+              href={text.facebook_url || "https://www.facebook.com/profile.php?id=100091760627380"}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-2 text-sm text-secondary-foreground/80 hover:text-secondary-foreground transition-colors"
             >
               <Facebook className="h-4 w-4" />
-              Follow us on Facebook
+              {text.footer_facebook_label || "Follow us on Facebook"}
             </a>
           </div>
 
@@ -99,18 +100,18 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
               </div>
             </div>
             <a
-              href="tel:+13432609276"
+              href={text.phone_tel_link || "tel:+13432609276"}
               className="flex items-center gap-2 text-sm text-primary font-medium hover:underline"
             >
               <Phone className="h-4 w-4" />
-              (343) 260-9276
+              {text.phone_display || "(343) 260-9276"}
             </a>
             <a
-              href="mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request"
+              href={text.email_mailto_link || "mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request"}
               className="mt-2 flex items-center gap-2 text-sm text-primary hover:underline"
             >
               <Mail className="h-4 w-4" />
-              sealthedeal1994@gmail.com
+              {text.email_address || "sealthedeal1994@gmail.com"}
             </a>
           </div>
         </div>
@@ -123,7 +124,7 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
             &copy; {new Date().getFullYear()} Seal The Deal Asphalt Care & Masonry. All Rights Reserved.
           </p>
           <p className="text-xs text-secondary-foreground/60">
-            {cms?.text.footer_tagline || "Fully Insured | Trusted | Local"}
+            {text.footer_tagline || "Fully Insured | Trusted | Local"}
           </p>
         </div>
       </div>
