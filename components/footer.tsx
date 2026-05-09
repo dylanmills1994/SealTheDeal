@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Phone, Mail, MapPin, Facebook, Check } from "lucide-react"
+import { DEFAULT_EMAIL_HREF } from "@/lib/site-config"
 
 const quickLinks = [
   { label: "Home", href: "/#services" },
@@ -107,7 +108,7 @@ export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
               {text.phone_display || "(343) 260-9276"}
             </a>
             <a
-              href={text.email_mailto_link || "mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request"}
+              href={DEFAULT_EMAIL_HREF}
               className="mt-2 flex items-center gap-2 text-sm text-primary hover:underline"
             >
               <Mail className="h-4 w-4" />

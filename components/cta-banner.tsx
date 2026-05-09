@@ -1,4 +1,5 @@
 import { Phone, Mail } from "lucide-react"
+import { DEFAULT_EMAIL_HREF } from "@/lib/site-config"
 
 export function CtaBanner({ cms }: { cms?: { text?: Record<string, string> } }) {
   const text = cms?.text ?? {}
@@ -27,7 +28,7 @@ export function CtaBanner({ cms }: { cms?: { text?: Record<string, string> } }) 
               </div>
             </a>
             <a
-              href={text.email_mailto_link || "mailto:sealthedeal1994@gmail.com?subject=Seal%20The%20Deal%20Quote%20Request"}
+              href={DEFAULT_EMAIL_HREF}
               className="flex items-center gap-3 text-primary-foreground transition-opacity hover:opacity-80"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
