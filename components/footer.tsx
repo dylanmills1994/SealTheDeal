@@ -3,10 +3,10 @@ import Image from "next/image"
 import { Phone, Mail, MapPin, Facebook, Check } from "lucide-react"
 
 const quickLinks = [
-  { label: "Home", href: "#services" },
-  { label: "Gallery", href: "#work" },
-  { label: "Services", href: "#process" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/#services" },
+  { label: "Gallery", href: "/#work" },
+  { label: "Services", href: "/#process" },
+  { label: "Contact", href: "/#contact" },
 ]
 
 const services = [
