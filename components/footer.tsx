@@ -16,7 +16,7 @@ const services = [
   "Sealcoating & Asphalt Care",
 ]
 
-export function Footer() {
+export function Footer({ cms }: { cms?: { text: Record<string, string> } }) {
   return (
     <footer className="bg-secondary text-secondary-foreground">
       <div className="mx-auto max-w-7xl px-4 py-12 lg:py-16">
@@ -42,7 +42,7 @@ export function Footer() {
               Asphalt care, masonry, concrete and foundation services you can count on. Insured. Trusted. Local.
             </p>
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=100091760627380"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-2 text-sm text-secondary-foreground/80 hover:text-secondary-foreground transition-colors"
@@ -123,7 +123,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Seal The Deal Asphalt Care & Masonry. All Rights Reserved.
           </p>
           <p className="text-xs text-secondary-foreground/60">
-            Fully Insured | Trusted | Local
+            {cms?.text.footer_tagline || "Fully Insured | Trusted | Local"}
           </p>
         </div>
       </div>
