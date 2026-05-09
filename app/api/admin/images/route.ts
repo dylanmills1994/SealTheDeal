@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 
 const COOKIE_NAME = "seal_admin_session"
-const BUCKET = "seal-the-deal-images"
+const BUCKET = "site-assets"
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 const MAX_BYTES = 8 * 1024 * 1024
 
@@ -11,6 +11,15 @@ function getExtension(mimeType: string) {
   if (mimeType === "image/png") return "png"
   if (mimeType === "image/webp") return "webp"
   return null
+}
+
+function toStoragePath(slot: string, ext: string) {
+  const safeSlot = slot.toLowerCase().replace(/[^a-z0-9_-]/g, "_")
+  return `${safeSlot}/${Date.now()}.${ext}`
+}
+
+function isValidSupabaseProjectUrl(url: string) {
+  return /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)
 }
 
 export async function POST(request: Request) {
@@ -23,27 +32,27 @@ export async function POST(request: Request) {
   if (!url || !serviceRoleKey) {
     return NextResponse.json({ error: "Missing Supabase server environment" }, { status: 500 })
   }
+  if (!isValidSupabaseProjectUrl(url)) {
+    return NextResponse.json({ error: "NEXT_PUBLIC_SUPABASE_URL must be https://<project-ref>.supabase.co" }, { status: 500 })
+  }
 
   try {
     const formData = await request.formData()
-    const slot = String(formData.get("id") || "")
-    const alt = String(formData.get("alt") || slot)
+    const slot = String(formData.get("id") || "").trim()
+    const alt = String(formData.get("alt") || slot).trim()
     const file = formData.get("file")
 
     if (!slot || !(file instanceof File) || file.size === 0) {
       return NextResponse.json({ error: "Missing slot or file" }, { status: 400 })
     }
-
     if (!ALLOWED_TYPES.includes(file.type) || file.size > MAX_BYTES) {
       return NextResponse.json({ error: "Upload must be jpg, jpeg, png, or webp under 8MB" }, { status: 400 })
     }
 
     const ext = getExtension(file.type)
-    if (!ext) {
-      return NextResponse.json({ error: "Unsupported file type" }, { status: 400 })
-    }
+    if (!ext) return NextResponse.json({ error: "Unsupported file type" }, { status: 400 })
 
-    const storagePath = `${slot}/${Date.now()}.${ext}`
+    const storagePath = toStoragePath(slot, ext)
     const upload = await fetch(`${url}/storage/v1/object/${BUCKET}/${storagePath}`, {
       method: "POST",
       headers: {
@@ -54,13 +63,12 @@ export async function POST(request: Request) {
       },
       body: Buffer.from(await file.arrayBuffer()),
     })
-
     if (!upload.ok) {
       return NextResponse.json({ error: `Storage upload failed: ${await upload.text()}` }, { status: 502 })
     }
 
     const imageUrl = `${url}/storage/v1/object/public/${BUCKET}/${storagePath}`
-    const upsert = await fetch(`${url}/rest/v1/site_images`, {
+    const upsert = await fetch(`${url}/rest/v1/site_images?id=eq.${encodeURIComponent(slot)}`, {
       method: "POST",
       headers: {
         apikey: serviceRoleKey,
@@ -69,13 +77,15 @@ export async function POST(request: Request) {
         Prefer: "resolution=merge-duplicates",
       },
       body: JSON.stringify({
+        id: slot,
         slot,
         label: slot,
         image_url: imageUrl,
         storage_path: storagePath,
-        alt_text: alt,
+        alt_text: alt || null,
         sort_order: slot.startsWith("gallery_") ? 200 : 100,
         is_active: true,
+        updated_at: new Date().toISOString(),
       }),
     })
 
