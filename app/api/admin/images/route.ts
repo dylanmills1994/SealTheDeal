@@ -28,13 +28,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized admin session" }, { status: 401 })
   }
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  // ✅ FIXED HERE
+  const url = process.env.SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
   if (!url || !serviceRoleKey) {
-    return NextResponse.json({ error: "Missing Supabase server environment" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Missing Supabase server environment" },
+      { status: 500 }
+    )
   }
+
   if (!isValidSupabaseProjectUrl(url)) {
-    return NextResponse.json({ error: "NEXT_PUBLIC_SUPABASE_URL must be https://<project-ref>.supabase.co" }, { status: 500 })
+    return NextResponse.json(
+      { error: "SUPABASE_URL must be https://<project-ref>.supabase.co" },
+      { status: 500 }
+    )
   }
 
   try {
@@ -45,29 +54,44 @@ export async function POST(request: Request) {
     if (!slot || !(file instanceof File) || file.size === 0) {
       return NextResponse.json({ error: "Missing slot or file" }, { status: 400 })
     }
+
     if (!ALLOWED_TYPES.includes(file.type) || file.size > MAX_BYTES) {
-      return NextResponse.json({ error: "Upload must be jpg, jpeg, png, webp, or gif under 8MB" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Upload must be jpg, jpeg, png, webp, or gif under 8MB" },
+        { status: 400 }
+      )
     }
 
     const ext = getExtension(file.type)
-    if (!ext) return NextResponse.json({ error: "Unsupported file type" }, { status: 400 })
+    if (!ext) {
+      return NextResponse.json({ error: "Unsupported file type" }, { status: 400 })
+    }
 
     const storagePath = toStoragePath(slot, ext)
-    const upload = await fetch(`${url}/storage/v1/object/${BUCKET}/${storagePath}`, {
-      method: "POST",
-      headers: {
-        apikey: serviceRoleKey,
-        Authorization: `Bearer ${serviceRoleKey}`,
-        "Content-Type": file.type,
-        "x-upsert": "true",
-      },
-      body: Buffer.from(await file.arrayBuffer()),
-    })
+
+    const upload = await fetch(
+      `${url}/storage/v1/object/${BUCKET}/${storagePath}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+          "Content-Type": file.type,
+          "x-upsert": "true",
+        },
+        body: Buffer.from(await file.arrayBuffer()),
+      }
+    )
+
     if (!upload.ok) {
-      return NextResponse.json({ error: `Storage upload failed: ${await upload.text()}` }, { status: 502 })
+      return NextResponse.json(
+        { error: `Storage upload failed: ${await upload.text()}` },
+        { status: 502 }
+      )
     }
 
     const imageUrl = `${url}/storage/v1/object/public/${BUCKET}/${storagePath}`
+
     const upsert = await fetch(`${url}/rest/v1/site_images?on_conflict=slot`, {
       method: "POST",
       headers: {
@@ -86,7 +110,10 @@ export async function POST(request: Request) {
     })
 
     if (!upsert.ok) {
-      return NextResponse.json({ error: `site_images upsert failed: ${await upsert.text()}` }, { status: 502 })
+      return NextResponse.json(
+        { error: `site_images upsert failed: ${await upsert.text()}` },
+        { status: 502 }
+      )
     }
 
     return NextResponse.json({ success: true, imageUrl, slot })
