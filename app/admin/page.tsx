@@ -13,14 +13,23 @@ const textLabels: Record<string, string> = {
   gallery_heading: "Gallery heading", gallery_intro: "Gallery intro text", phone_display: "Phone display text", phone_tel_link: "Phone tel link", email_address: "Email address", email_mailto_link: "Email mailto link", facebook_url: "Facebook URL",
 }
 
-const imageLabels: Record<string, string> = { hero_logo: "Main logo", services_sealcoating: "Sealcoating image", services_crack_filling: "Crack filling image", services_masonry: "Masonry image", services_concrete: "Concrete image" }
+const imageLabels: Record<string, string> = {
+  hero_logo: "Main logo",
+  services_sealcoating: "Sealcoating image",
+  services_crack_filling: "Crack filling image",
+  services_masonry: "Masonry image",
+  services_concrete: "Concrete image",
+  project_01: "Homepage project 1",
+  project_02: "Homepage project 2",
+  project_03: "Homepage project 3",
+  project_04: "Homepage project 4",
+}
 
 async function isAuthed() { return (await cookies()).get(COOKIE_NAME)?.value === "1" }
 async function login(formData: FormData) { "use server"; const pass = String(formData.get("password") || ""); if (!process.env.SEAL_ADMIN_PASSWORD || pass !== process.env.SEAL_ADMIN_PASSWORD) return redirect("/admin?error=Invalid+password"); (await cookies()).set(COOKIE_NAME, "1", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" }); redirect("/admin") }
 async function logout() { "use server"; (await cookies()).delete(COOKIE_NAME); redirect("/admin") }
 
 async function saveText(formData: FormData) { "use server"; if (!(await isAuthed())) redirect("/admin"); for (const [id, value] of Object.entries(Object.fromEntries(formData.entries()))) await upsertContent(id, String(value)); revalidatePath("/"); revalidatePath("/gallery"); redirect("/admin?success=Website+content+saved") }
-
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const authed = await isAuthed(); const { text, images } = await getCmsContent(); const params = await searchParams
